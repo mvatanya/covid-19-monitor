@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Cards, Chart, CountryPicker } from './components'; //has to create index.js inside this components folder to be able to do this
+import styles from './App.module.css';
+import { fetchData } from './api'
+import coronaImage from './images/corona_image.png'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    data: {},
+    country: 'global', 
+  }
+
+  
+  async componentDidMount() {
+    const fetchedData = await fetchData();
+    this.setState({ data: fetchedData }) 
+  }
+
+  handleCountryChange = async (country) => {
+    console.log('country', country)
+    const fetchedData = country === 'global' ? await fetchData() : await fetchData(country)
+    this.setState({ country, data: fetchedData })
+  }
+
+  render() {
+    const { data, country } = this.state;
+    return (
+      <div className={styles.container}>
+        <img className={styles.image} src={coronaImage} alt='COVID-19'/>
+        <Cards data={data} />
+        <CountryPicker handleCountryChange={this.handleCountryChange} />
+        <Chart data={data} country={country} />
+      </div>
+    );
+  }
+  
+
 }
 
 export default App;
