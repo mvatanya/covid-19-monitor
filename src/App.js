@@ -18,7 +18,6 @@ class App extends React.Component {
   }
 
   handleCountryChange = async (country) => {
-    console.log('country', country)
     const fetchedData = country === 'global' ? await fetchData() : await fetchData(country)
     this.setState({ country, data: fetchedData })
   }
@@ -27,15 +26,13 @@ class App extends React.Component {
     const { data, country } = this.state;
     return (
       <div className={styles.container}>
-        <img className={styles.image} src={coronaImage} alt='COVID-19'/>
+        <h1>COVID-19 CHART</h1>
         <Cards data={data} />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Chart data={data} country={country} />
       </div>
     );
   }
-  
-
 }
 
 export default App;
